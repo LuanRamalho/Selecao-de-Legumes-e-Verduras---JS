@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Imagens de Vegetais</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: lightblue;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #3B0053;
+            font-size: 24px;
+        }
+
+        select {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+            border: 2px solid #3B0053;
+            border-radius: 5px;
+            outline: none;
+            width: 80%;
+        }
+
+        button {
+            background-color: lightgreen;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: green;
+        }
+
+        .image-container {
+            margin-top: 20px;
+            height: 300px;
+            width: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: white;
+            border: 2px dashed lightgray;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        .image-container span {
+            color: gray;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Selecione um vegetal para visualizar a imagem</h1>
+
+        <select id="vegetableSelect">
+            <option value="">Selecione um vegetal</option>
+        </select>
+
+        <button onclick="displayImage()">Exibir Imagem</button>
+
+        <div class="image-container" id="imageContainer">
+            <span>Imagem aparecerá aqui</span>
+        </div>
+    </div>
+
+    <script>
+        const vegetableImages = {
+            "Batata": "https://i.pinimg.com/736x/ac/2d/b5/ac2db545397a4f1baaea5e7a572ec1fa.jpg",
+            "Cenoura": "https://i.pinimg.com/736x/22/0e/f2/220ef2c061366eeef6019bec11e74755.jpg",
+            "Quiabo": "https://i.pinimg.com/736x/d6/72/58/d6725890f3b306a0ada9b6cdce57a35a.jpg",
+            "Ervilha": "https://i.pinimg.com/736x/9c/b7/be/9cb7beb2ed288f016d6a7c1e435f5802.jpg",
+            "Milho": "https://i.pinimg.com/736x/0f/f1/78/0ff178e6c39a94791ac724a21ddb325a.jpg",
+            "Inhame": "https://i.pinimg.com/736x/e6/21/46/e62146561a0c8f086449e23a3425dfa5.jpg",
+            "Aipim": "https://i.pinimg.com/736x/8e/b6/5a/8eb65a66fce58d751c6a1efeb1a432b3.jpg",
+            "Cebola": "https://i.pinimg.com/736x/08/69/b7/0869b7b0d6c7526e32f4a36e6b0ddc42.jpg",
+            "Beterraba": "https://img.freepik.com/vetores-gratis/conjunto-de-desenhos-animados-de-beterraba_1308-131802.jpg",
+            "Berinjela": "https://i.pinimg.com/736x/db/2f/d8/db2fd842a096d30f38d14f0f2170d71d.jpg",
+            "Alho": "https://i.pinimg.com/736x/d1/69/1e/d1691e062dc617a74c3af7171f6ce9b2.jpg",
+            "Abóbora": "https://i.pinimg.com/736x/f7/8d/31/f78d319e9cc6adfc5aba9f87378759ee.jpg",
+            "Alface": "https://i.pinimg.com/736x/71/e0/7c/71e07cab5504450ea92047e2dc2d949c.jpg",
+            "Alho-Poró": "https://i.pinimg.com/736x/b4/b8/d5/b4b8d5410338b64b22cbb7f0e7c26550.jpg",
+            "Brócolis": "https://i.pinimg.com/736x/04/f8/88/04f88868489bc9a1902989dc6caa4ed0.jpg",
+            "Espinafre": "https://i.pinimg.com/736x/b6/f6/20/b6f6200e6e7bffed9e6a1688dd717b6c.jpg",
+            "Alcachofra": "https://i.pinimg.com/736x/62/a8/75/62a875698e37053965c6fac344e0ba50.jpg",
+            "Agrião": "https://i.pinimg.com/736x/a5/db/6c/a5db6cafcf96ff2912eda14d54782bb0.jpg",
+            "Rúcula": "https://media.istockphoto.com/id/954830520/vector/rucola-or-arugula-icon.jpg?s=612x612&w=0&k=20&c=QZ_9Iok9TZlyBndTI-M8vVgLFy7vFXIBnaZMYgFk7Tw=",
+            "Repolho": "https://i.pinimg.com/736x/e5/f8/d6/e5f8d6a876f189371b081d5807955fc2.jpg",
+            "Couve": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDyIzhLOaWRqZ0QLS3sb6ZE9F8_whnDVLSGPw_7jRky_yap_uzJ78bonmpu4jzdbHSkW0&usqp=CAU",
+            "Couve-Flor": "https://i.pinimg.com/736x/cb/90/0c/cb900c6423fa9378ed9c289228517d11.jpg"
+        };
+
+        const vegetableSelect = document.getElementById("vegetableSelect");
+        const imageContainer = document.getElementById("imageContainer");
+
+        // Preenche o combo box com os vegetais
+        for (const vegetable in vegetableImages) {
+            const option = document.createElement("option");
+            option.value = vegetable;
+            option.textContent = vegetable;
+            vegetableSelect.appendChild(option);
+        }
+
+        function displayImage() {
+            const selectedVegetable = vegetableSelect.value;
+            if (selectedVegetable && vegetableImages[selectedVegetable]) {
+                imageContainer.innerHTML = `<img src="${vegetableImages[selectedVegetable]}" alt="${selectedVegetable}">`;
+            } else {
+                imageContainer.innerHTML = `<span>Imagem não encontrada</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
